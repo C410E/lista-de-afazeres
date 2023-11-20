@@ -1,20 +1,19 @@
 const knex = require("../conexao");
 
 const cadastrarTarefa = async (req, res) => {
-    const { tarefa, tarefa_realizada} = req.body
+    const { tarefa } = req.body
 
     if (!tarefa) {
         return res.status(400).json({mensagem: "A tarefa não pode estar vazia"});
     }
-
-    if (typeof tarefa_realizada !== "boolean") {
-        return res.status(400).json({mensagem: "tarefa_realizada só aceita valores booleanos"})
+    
+    if (tarefa.length > 500) {
+        return res.status(400).json({mensagem: "Os 500 caracteres da tarefa excederam seu limite"})
     }
 
     try {
         const postarTarefa = await knex("lista_de_afazeres").insert({
-            tarefa,
-            tarefa_realizada
+            tarefa
         })  
 
         if (!postarTarefa) {
